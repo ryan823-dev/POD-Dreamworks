@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据大屏 - POD Dreamworks 管理端</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #22c55e;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #111827;
+            --dark-light: #1f2937;
+            --gray: #6b7280;
+            --gray-light: #9ca3af;
+            --light: #374151;
+            --white: #ffffff;
+            --sidebar-width: 240px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: var(--white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar - Admin Theme: Dark Gray */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .logo-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .logo-text h1 {
+            font-size: 15px;
+            font-weight: 700;
+        }
+        
+        .logo-text span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--accent);
+            border-radius: 4px;
+            font-size: 10px;
+            margin-top: 4px;
+            color: #000;
+            font-weight: 600;
+        }
+        
+        /* Navigation */
+        .nav-section {
+            padding: 16px 0;
+            flex: 1;
+        }
+        
+        .nav-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.3);
+            padding: 8px 20px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 12px;
+            text-decoration: none;
+            position: relative;
+            font-size: 14px;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--white);
+        }
+        
+        .nav-item.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--white);
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+        }
+        
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        /* User Card */
+        .user-card {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .user-role {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .dashboard-title span {
+            font-size: 14px;
+            color: var(--gray-light);
+            font-weight: normal;
+            margin-left: 12px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .time-display {
+            font-size: 14px;
+            color: var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-refresh {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .btn-refresh:hover {
+            background: var(--primary);
+        }
+        
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        
+        .stat-card.purple::before { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+        .stat-card.blue::before { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+        .stat-card.green::before { background: linear-gradient(90deg, #22c55e, #10b981); }
+        .stat-card.orange::before { background: linear-gradient(90deg, #f59e0b, #f97316); }
+        .stat-card.pink::before { background: linear-gradient(90deg, #ec4899, #f43f5e); }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-light);
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-card.purple .stat-value { color: #a5b4fc; }
+        .stat-card.blue .stat-value { color: #7dd3fc; }
+        .stat-card.green .stat-value { color: #86efac; }
+        .stat-card.orange .stat-value { color: #fcd34d; }
+        .stat-card.pink .stat-value { color: #f9a8d4; }
+        
+        .stat-change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-change.up { color: var(--secondary); }
+        .stat-change.down { color: var(--danger); }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .chart-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .chart-tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(255,255,255,0.05);
+            padding: 4px;
+            border-radius: 8px;
+        }
+        
+        .chart-tab {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--gray-light);
+            transition: all 0.2s;
+        }
+        
+        .chart-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Fake Chart */
+        .chart-area {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 20px 0;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--primary), rgba(99,102,241,0.3));
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .chart-bar:hover {
+            background: linear-gradient(180deg, #818cf8, rgba(99,102,241,0.5));
+        }
+        
+        .chart-bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--gray-light);
+        }
+        
+        /* Pie Chart */
+        .pie-container {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 20px 0;
+        }
+        
+        .pie-chart {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--primary) 0deg 144deg,
+                var(--secondary) 144deg 234deg,
+                var(--accent) 234deg 306deg,
+                var(--info) 306deg 360deg
+            );
+            position: relative;
+        }
+        
+        .pie-chart::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: #1a1a2e;
+            border-radius: 50%;
+        }
+        
+        .pie-legend {
+            flex: 1;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        .legend-dot.purple { background: var(--primary); }
+        .legend-dot.green { background: var(--secondary); }
+        .legend-dot.orange { background: var(--accent); }
+        .legend-dot.blue { background: var(--info); }
+        
+        .legend-value {
+            margin-left: auto;
+            font-weight: 600;
+        }
+        
+        /* Bottom Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .info-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .info-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .info-card-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .view-all {
+            font-size: 12px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        /* School List */
+        .school-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .school-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .school-info {
+            flex: 1;
+        }
+        
+        .school-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .school-stats {
+            font-size: 12px;
+            color: var(--gray-light);
+        }
+        
+        .school-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .school-badge.active {
+            background: rgba(34,197,94,0.2);
+            color: var(--secondary);
+        }
+        
+        /* Ranking List */
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ranking-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .ranking-num.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; }
+        .ranking-num.silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+        .ranking-num.bronze { background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; }
+        .ranking-num.normal { background: rgba(255,255,255,0.1); color: var(--gray-light); }
+        
+        .ranking-info {
+            flex: 1;
+        }
+        
+        .ranking-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .ranking-class {
+            font-size: 11px;
+            color: var(--gray-light);
+        }
+        
+        .ranking-score {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Activity List */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .activity-icon.submit { background: rgba(59,130,246,0.2); color: var(--info); }
+        .activity-icon.approve { background: rgba(34,197,94,0.2); color: var(--secondary); }
+        .activity-icon.order { background: rgba(245,158,11,0.2); color: var(--accent); }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .activity-text strong {
+            color: var(--white);
+        }
+        
+        .activity-time {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .bottom-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-content">
+                    <div class="logo-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>POD Dreamworks</h1>
+                        <span>跨境电商实训平台</span>
+                        <div class="role-badge">管理端</div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-section">
+                <div class="nav-section-title">管理概览</div>
+                <a href="admin-dashboard.html" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>数据大屏</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-bullseye"></i>
+                    <span>关键指标</span>
+                </a>
+                
+                <div class="nav-section-title">学校管理</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-university"></i>
+                    <span>院系设置</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users-class"></i>
+                    <span>班级管理</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>学期设置</span>
+                </a>
+                
+                <div class="nav-section-title">人员管理</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>教师列表</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>学生管理</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>权限配置</span>
+                </a>
+                
+                <div class="nav-section-title">系统设置</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-box"></i>
+                    <span>产品库配置</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-coins"></i>
+                    <span>积分规则</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>系统配置</span>
+                </a>
+            </nav>
+            
+            <div class="user-card">
+                <div class="user-avatar">管</div>
+                <div class="user-info">
+                    <div class="user-name">系统管理员</div>
+                    <div class="user-role">超级管理员</div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">
+                    数据总览
+                    <span>实时监控平台运营状况</span>
+                </h1>
+                <div class="header-actions">
+                    <div class="time-display">
+                        <i class="fas fa-clock"></i>
+                        <span id="current-time">2026-03-02 20:45:30</span>
+                    </div>
+                    <button class="btn-refresh">
+                        <i class="fas fa-sync-alt"></i>
+                        刷新数据
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Row -->
+            <div class="stats-row">
+                <div class="stat-card purple">
+                    <div class="stat-label">入驻学校</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i>
+                        较上月 +2
+                    </div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-label">注册学生</div>
+                    <div class="stat-value">3,856</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i>
+                        较上月 +12.5%
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label">设计作品</div>
+                    <div class="stat-value">28,432</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i>
+                        较上月 +18.2%
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-label">已上架商品</div>
+                    <div class="stat-value">12,567</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i>
+                        较上月 +15.8%
+                    </div>
+                </div>
+                <div class="stat-card pink">
+                    <div class="stat-label">真实订单</div>
+                    <div class="stat-value">2,134</div>
+                    <div class="stat-change up">
+                        <i class="fas fa-arrow-up"></i>
+                        较上月 +23.5%
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <!-- Bar Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">作品提交趋势</h3>
+                        <div class="chart-tabs">
+                            <span class="chart-tab active">本周</span>
+                            <span class="chart-tab">本月</span>
+                            <span class="chart-tab">本学期</span>
+                        </div>
+                    </div>
+                    <div class="chart-area">
+                        <div class="chart-bar" style="height: 45%" data-label="周一"></div>
+                        <div class="chart-bar" style="height: 65%" data-label="周二"></div>
+                        <div class="chart-bar" style="height: 85%" data-label="周三"></div>
+                        <div class="chart-bar" style="height: 55%" data-label="周四"></div>
+                        <div class="chart-bar" style="height: 95%" data-label="周五"></div>
+                        <div class="chart-bar" style="height: 35%" data-label="周六"></div>
+                        <div class="chart-bar" style="height: 25%" data-label="周日"></div>
+                    </div>
+                </div>
+                
+                <!-- Pie Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">产品类型分布</h3>
+                    </div>
+                    <div class="pie-container">
+                        <div class="pie-chart"></div>
+                        <div class="pie-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot purple"></span>
+                                <span>T恤/卫衣</span>
+                                <span class="legend-value">40%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot green"></span>
+                                <span>马克杯</span>
+                                <span class="legend-value">25%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot orange"></span>
+                                <span>毛毯/挂毯</span>
+                                <span class="legend-value">20%</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot blue"></span>
+                                <span>其他</span>
+                                <span class="legend-value">15%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Grid -->
+            <div class="bottom-grid">
+                <!-- Schools -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h3 class="info-card-title">入驻学校</h3>
+                        <span class="view-all">查看全部 →</span>
+                    </div>
+                    <div class="school-item">
+                        <div class="school-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="school-info">
+                            <div class="school-name">杭州职业技术学院</div>
+                            <div class="school-stats">856 学生 · 12 教师</div>
+                        </div>
+                        <span class="school-badge active">活跃</span>
+                    </div>
+                    <div class="school-item">
+                        <div class="school-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="school-info">
+                            <div class="school-name">宁波商贸学校</div>
+                            <div class="school-stats">642 学生 · 8 教师</div>
+                        </div>
+                        <span class="school-badge active">活跃</span>
+                    </div>
+                    <div class="school-item">
+                        <div class="school-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="school-info">
+                            <div class="school-name">温州电商学院</div>
+                            <div class="school-stats">534 学生 · 6 教师</div>
+                        </div>
+                        <span class="school-badge active">活跃</span>
+                    </div>
+                </div>
+                
+                <!-- Top Students -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h3 class="info-card-title">学生排行榜</h3>
+                        <span class="view-all">全部排名 →</span>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-num gold">1</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">张小红</div>
+                            <div class="ranking-class">杭职院 · 电商2301</div>
+                        </div>
+                        <div class="ranking-score">8,650</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-num silver">2</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">李大伟</div>
+                            <div class="ranking-class">宁波商贸 · 电商2302</div>
+                        </div>
+                        <div class="ranking-score">7,890</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-num bronze">3</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">王晓明</div>
+                            <div class="ranking-class">温州电商 · 电商2301</div>
+                        </div>
+                        <div class="ranking-score">7,234</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-num normal">4</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">赵小雨</div>
+                            <div class="ranking-class">杭职院 · 电商2302</div>
+                        </div>
+                        <div class="ranking-score">6,890</div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h3 class="info-card-title">实时动态</h3>
+                        <span class="view-all">全部 →</span>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon submit">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>张小红</strong> 提交了新设计</div>
+                            <div class="activity-time">2分钟前 · 杭职院</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon approve">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>王老师</strong> 通过了 3 件作品审核</div>
+                            <div class="activity-time">5分钟前 · 宁波商贸</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon order">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>李大伟</strong> 收到新订单</div>
+                            <div class="activity-time">12分钟前 · 宁波商贸</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon submit">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>温州电商学院</strong> 新增 25 名学生</div>
+                            <div class="activity-time">1小时前</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).replace(/\//g, '-');
+            document.getElementById('current-time').textContent = timeStr;
+        }
+        setInterval(updateTime, 1000);
+        
+        // Chart tabs
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Refresh button animation
+        document.querySelector('.btn-refresh').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            icon.classList.add('fa-spin');
+            setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+        });
+    </script>
+</body>
+</html>

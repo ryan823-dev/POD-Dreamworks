@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POD Dreamworks - 跨境电商实训平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #0a0a1a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* ====== HERO ====== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated background */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 60% at 50% 20%, rgba(99,102,241,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(236,72,153,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 40% at 20% 70%, rgba(59,130,246,0.1) 0%, transparent 50%);
+        }
+        
+        /* Stars */
+        .stars {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: var(--opacity); transform: scale(1); }
+        }
+        
+        /* Floating orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: rgba(99,102,241,0.15);
+            top: 10%; left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 250px; height: 250px;
+            background: rgba(236,72,153,0.1);
+            top: 60%; right: 10%;
+            animation-delay: -7s;
+        }
+        
+        .orb-3 {
+            width: 200px; height: 200px;
+            background: rgba(59,130,246,0.12);
+            bottom: 20%; left: 30%;
+            animation-delay: -14s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 10px) scale(1.02); }
+        }
+        
+        /* Navigation */
+        .top-nav {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .nav-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+        }
+        
+        .nav-login {
+            padding: 10px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: white !important;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-login:hover {
+            background: rgba(255,255,255,0.2) !important;
+        }
+        
+        /* Hero Content */
+        .hero-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 48px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 100px;
+            font-size: 13px;
+            color: #a5b4fc;
+            margin-bottom: 32px;
+        }
+        
+        .hero-badge i {
+            font-size: 12px;
+        }
+        
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+        }
+        
+        .hero-title .gradient {
+            background: linear-gradient(135deg, #a5b4fc, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: rgba(255,255,255,0.5);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 48px;
+        }
+        
+        .hero-subtitle strong {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* Scroll indicator */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+        
+        /* ====== STATS ====== */
+        .stats-section {
+            position: relative;
+            z-index: 10;
+            padding: 80px 48px;
+            background: linear-gradient(180deg, transparent 0%, rgba(99,102,241,0.03) 100%);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .stats-item {
+            text-align: center;
+            padding: 32px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .stats-item:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-4px);
+        }
+        
+        .stats-number {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+        
+        .stats-item:nth-child(1) .stats-number { color: #a5b4fc; }
+        .stats-item:nth-child(2) .stats-number { color: #86efac; }
+        .stats-item:nth-child(3) .stats-number { color: #fcd34d; }
+        .stats-item:nth-child(4) .stats-number { color: #f9a8d4; }
+        
+        .stats-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* ====== ROLES ====== */
+        .roles-section {
+            padding: 80px 48px 120px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-tag {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .role-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.15);
+        }
+        
+        .role-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .role-card:hover::before {
+            opacity: 1;
+        }
+        
+        .role-card.student::before {
+            background: linear-gradient(180deg, rgba(99,102,241,0.1) 0%, transparent 60%);
+        }
+        
+        .role-card.teacher::before {
+            background: linear-gradient(180deg, rgba(59,130,246,0.1) 0%, transparent 60%);
+        }
+        
+        .role-card.admin::before {
+            background: linear-gradient(180deg, rgba(245,158,11,0.1) 0%, transparent 60%);
+        }
+        
+        .role-card-visual {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .role-icon-bg {
+            width: 120px;
+            height: 120px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s;
+        }
+        
+        .role-card:hover .role-icon-bg {
+            transform: scale(1.1);
+        }
+        
+        .role-card.student .role-icon-bg {
+            background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2));
+            box-shadow: 0 20px 40px -20px rgba(99,102,241,0.3);
+        }
+        
+        .role-card.teacher .role-icon-bg {
+            background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(6,182,212,0.2));
+            box-shadow: 0 20px 40px -20px rgba(59,130,246,0.3);
+        }
+        
+        .role-card.admin .role-icon-bg {
+            background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(249,115,22,0.2));
+            box-shadow: 0 20px 40px -20px rgba(245,158,11,0.3);
+        }
+        
+        .role-card-glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+        }
+        
+        .role-card.student .role-card-glow { background: #6366f1; }
+        .role-card.teacher .role-card-glow { background: #3b82f6; }
+        .role-card.admin .role-card-glow { background: #f59e0b; }
+        
+        .role-card-body {
+            padding: 0 32px 32px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .role-card-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .role-card-desc {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .role-card-features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        
+        .role-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .role-feature i {
+            font-size: 10px;
+        }
+        
+        .role-card.student .role-feature i { color: #818cf8; }
+        .role-card.teacher .role-feature i { color: #60a5fa; }
+        .role-card.admin .role-feature i { color: #fbbf24; }
+        
+        .role-card-enter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .role-card.student .role-card-enter {
+            background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05));
+            color: #a5b4fc;
+        }
+        
+        .role-card.teacher .role-card-enter {
+            background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05));
+            color: #93c5fd;
+        }
+        
+        .role-card.admin .role-card-enter {
+            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+            color: #fcd34d;
+        }
+        
+        .role-card:hover .role-card-enter {
+            gap: 12px;
+        }
+        
+        .role-card.student:hover .role-card-enter { background: #6366f1; color: white; }
+        .role-card.teacher:hover .role-card-enter { background: #3b82f6; color: white; }
+        .role-card.admin:hover .role-card-enter { background: #f59e0b; color: #000; }
+        
+        /* ====== FEATURES ====== */
+        .features-section {
+            padding: 80px 48px;
+            position: relative;
+            z-index: 10;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .feature-item {
+            text-align: center;
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 16px;
+        }
+        
+        .feature-icon.f1 { background: rgba(99,102,241,0.15); color: #818cf8; }
+        .feature-icon.f2 { background: rgba(34,197,94,0.15); color: #86efac; }
+        .feature-icon.f3 { background: rgba(236,72,153,0.15); color: #f9a8d4; }
+        .feature-icon.f4 { background: rgba(245,158,11,0.15); color: #fcd34d; }
+        
+        .feature-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .feature-desc {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            line-height: 1.5;
+        }
+        
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 48px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .footer-brand-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .footer-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .footer-tech {
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .footer-right {
+            font-size: 12px;
+            color: rgba(255,255,255,0.25);
+        }
+        
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 48px; }
+            .roles-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 640px) {
+            .hero-title { font-size: 36px; }
+            .top-nav { padding: 20px 24px; }
+            .nav-links { display: none; }
+            .stats-section, .roles-section, .features-section, .footer { padding-left: 24px; padding-right: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="stars" id="stars"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        
+        <!-- Nav -->
+        <nav class="top-nav">
+            <div class="nav-logo">
+                <div class="nav-logo-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <span class="nav-logo-text">POD Dreamworks</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">平台特色</a>
+                <a href="#roles">角色入口</a>
+                <a href="#" class="nav-login"><i class="fas fa-sign-in-alt"></i> 登录平台</a>
+            </div>
+        </nav>
+        
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-sparkles"></i>
+                AI驱动 · 真实电商 · 创意实训
+            </div>
+            <h1 class="hero-title">
+                让每一个创意<br>
+                <span class="gradient">走向全球货架</span>
+            </h1>
+            <p class="hero-subtitle">
+                <strong>POD Dreamworks</strong> 是面向职业院校的跨境电商实训平台。<br>
+                学生自由创作设计，AI辅助合规检测，作品真实上架到全球平台。
+            </p>
+        </div>
+        
+        <div class="scroll-hint">
+            <span>向下浏览</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+    
+    <!-- Stats -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stats-item">
+                <div class="stats-number" id="stat-schools">12</div>
+                <div class="stats-label">入驻学校</div>
+            </div>
+            <div class="stats-item">
+                <div class="stats-number" id="stat-students">3,856</div>
+                <div class="stats-label">实训学生</div>
+            </div>
+            <div class="stats-item">
+                <div class="stats-number" id="stat-designs">28,432</div>
+                <div class="stats-label">设计作品</div>
+            </div>
+            <div class="stats-item">
+                <div class="stats-number" id="stat-orders">2,134</div>
+                <div class="stats-label">真实订单</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Roles -->
+    <section class="roles-section" id="roles">
+        <div class="section-header">
+            <div class="section-tag">角色入口</div>
+            <h2 class="section-title">选择你的身份，开始探索</h2>
+        </div>
+        
+        <div class="roles-grid">
+            <!-- Student -->
+            <a href="student-home.html" class="role-card student">
+                <div class="role-card-visual">
+                    <div class="role-card-glow"></div>
+                    <div class="role-icon-bg">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                </div>
+                <div class="role-card-body">
+                    <h3 class="role-card-name">我是学生</h3>
+                    <p class="role-card-desc">自由创作设计、提交作品、真实上架到海外平台，收获订单和成长</p>
+                    <div class="role-card-features">
+                        <div class="role-feature"><i class="fas fa-circle"></i> AI辅助设计创作</div>
+                        <div class="role-feature"><i class="fas fa-circle"></i> 产品效果实时预览</div>
+                        <div class="role-feature"><i class="fas fa-circle"></i> 真实订单跟踪分析</div>
+                    </div>
+                    <div class="role-card-enter">
+                        进入学生工作台 <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Teacher -->
+            <a href="teacher-home.html" class="role-card teacher">
+                <div class="role-card-visual">
+                    <div class="role-card-glow"></div>
+                    <div class="role-icon-bg">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                </div>
+                <div class="role-card-body">
+                    <h3 class="role-card-name">我是教师</h3>
+                    <p class="role-card-desc">布置实训任务、审核学生作品、AI侵权检测辅助、数据化教学管理</p>
+                    <div class="role-card-features">
+                        <div class="role-feature"><i class="fas fa-circle"></i> 智能侵权风险检测</div>
+                        <div class="role-feature"><i class="fas fa-circle"></i> 一键审核通过上架</div>
+                        <div class="role-feature"><i class="fas fa-circle"></i> 多维度教学报表</div>
+                    </div>
+                    <div class="role-card-enter">
+                        进入教学管理台 <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Admin -->
+            <a href="admin-dashboard.html" class="role-card admin">
+                <div class="role-card-visual">
+                    <div class="role-card-glow"></div>
+                    <div class="role-icon-bg">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+                <div class="role-card-body">
+                    <h3 class="role-card-name">我是管理员</h3>
+                    <p class="role-card-desc">全局数据大屏、院系班级配置、教师权限管理、运营数据报表</p>
+                    <div class="role-card-features">
+                        <div class="role-feature"><i class="fas fa-circle"></i> 全校实时数据大屏</div>
+                        <div class="role-feature"><i class="fas fa-circle"></i> 多校区统一管理</div>
+                        <div class="role-feature"><i class="fas fa-circle"></i> 教学成果量化导出</div>
+                    </div>
+                    <div class="role-card-enter">
+                        进入管理控制台 <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+    
+    <!-- Features -->
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <div class="section-tag">核心能力</div>
+            <h2 class="section-title">为什么选择 POD Dreamworks</h2>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon f1">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h4 class="feature-name">AI 赋能创作</h4>
+                <p class="feature-desc">学生可使用任意AI工具自由创作，平台不限制设计来源，鼓励创新</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon f2">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4 class="feature-name">智能合规检测</h4>
+                <p class="feature-desc">接入小AI商创侵权检测引擎，自动识别品牌、版权风险，保障安全上架</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon f3">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h4 class="feature-name">真实平台上架</h4>
+                <p class="feature-desc">不是模拟训练，作品真实上架到 Temu、Amazon 等跨境平台，获得真实订单</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon f4">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h4 class="feature-name">数据驱动教学</h4>
+                <p class="feature-desc">全链路数据追踪，从设计到订单，用真实数据指导教学，量化教学成果</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="footer-brand">
+                    <div class="footer-brand-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    POD Dreamworks
+                </div>
+                <div class="footer-divider"></div>
+                <div class="footer-tech">
+                    <i class="fas fa-microchip"></i>
+                    技术支持：小AI商创
+                </div>
+            </div>
+            <div class="footer-right">
+                &copy; 2026 POD Dreamworks. 跨境电商实训平台.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+            star.style.setProperty('--opacity', (0.3 + Math.random() * 0.7));
+            star.style.animationDelay = Math.random() * 5 + 's';
+            starsContainer.appendChild(star);
+        }
+        
+        // Number animation
+        function animateNumber(el, target, suffix = '') {
+            const duration = 2000;
+            const start = 0;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (target - start) * eased);
+                el.textContent = current.toLocaleString() + suffix;
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+        
+        // Intersection Observer for stats
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumber(document.getElementById('stat-schools'), 12);
+                    animateNumber(document.getElementById('stat-students'), 3856);
+                    animateNumber(document.getElementById('stat-designs'), 28432);
+                    animateNumber(document.getElementById('stat-orders'), 2134);
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.querySelector('.stats-section'));
+    </script>
+</body>
+</html>

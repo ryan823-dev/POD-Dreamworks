@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待审核 - POD Dreamworks 教师端</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #22c55e;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --light: #f1f5f9;
+            --lighter: #f8fafc;
+            --white: #ffffff;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--lighter);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar - Teacher Theme: Deep Blue */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .logo-text h1 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .logo-text span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--primary);
+            border-radius: 4px;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+        
+        /* Navigation */
+        .nav-section {
+            padding: 16px 0;
+            flex: 1;
+        }
+        
+        .nav-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            padding: 8px 20px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 12px;
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+        }
+        
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.3);
+            color: var(--white);
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary-light);
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .nav-item .badge.warning {
+            background: var(--accent);
+        }
+        
+        .nav-item.highlight {
+            margin: 8px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* User Card */
+        .user-card {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--white);
+            height: var(--header-height);
+            padding: 0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .breadcrumb {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .breadcrumb a {
+            color: var(--gray);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+        
+        .breadcrumb span {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+            color: var(--gray);
+        }
+        
+        .header-icon:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .header-icon .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--white);
+        }
+        
+        /* Page Content */
+        .page-content {
+            padding: 32px;
+        }
+        
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .page-title-sub {
+            color: var(--gray);
+            font-size: 14px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        
+        /* Filters */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .filter-tab {
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.2s;
+        }
+        
+        .filter-tab:hover {
+            color: var(--dark);
+        }
+        
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .filter-tab .count {
+            margin-left: 6px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        .filter-search {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border-radius: 10px;
+            padding: 8px 16px;
+            gap: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .filter-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+        }
+        
+        .filter-search i {
+            color: var(--gray);
+        }
+        
+        .filter-select {
+            background: var(--white);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: var(--dark);
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        /* Review Grid */
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Review Card */
+        .review-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .review-card.risk {
+            border: 2px solid var(--danger);
+        }
+        
+        .review-card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .review-card-image i {
+            font-size: 64px;
+            color: var(--primary);
+            opacity: 0.3;
+        }
+        
+        .review-card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .review-card-badge.safe {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .review-card-badge.pending {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .review-card-badge.risk {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .review-card-product {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            padding: 4px 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .review-card-body {
+            padding: 20px;
+        }
+        
+        .review-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .review-card-student {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .student-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .student-info {
+            flex: 1;
+        }
+        
+        .student-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
+        }
+        
+        .student-class {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .review-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid var(--light);
+        }
+        
+        .review-card-time {
+            font-size: 13px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .review-card-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .review-action-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .review-action-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .review-action-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .review-action-btn.outline {
+            background: transparent;
+            border: 1px solid var(--light);
+            color: var(--gray);
+        }
+        
+        .review-action-btn.outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray);
+        }
+        
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .review-grid { grid-template-columns: 1fr; }
+            .filters-bar { flex-direction: column; }
+            .filter-search { max-width: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-content">
+                    <div class="logo-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>POD Dreamworks</h1>
+                        <span>跨境电商实训平台</span>
+                        <div class="role-badge">教师端</div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-section">
+                <div class="nav-section-title">工作台</div>
+                <a href="teacher-home.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>教学概览</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-bell"></i>
+                    <span>通知提醒</span>
+                    <span class="badge">5</span>
+                </a>
+                
+                <div class="nav-section-title">学生管理</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>班级列表</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>学生列表</span>
+                </a>
+                
+                <div class="nav-section-title">任务管理</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>任务列表</span>
+                </a>
+                <a href="#" class="nav-item highlight">
+                    <i class="fas fa-plus"></i>
+                    <span>发布任务</span>
+                </a>
+                
+                <div class="nav-section-title">审核中心</div>
+                <a href="teacher-review.html" class="nav-item active">
+                    <i class="fas fa-clock"></i>
+                    <span>待审核</span>
+                    <span class="badge">12</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>已通过</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-times-circle"></i>
+                    <span>已退回</span>
+                </a>
+                
+                <div class="nav-section-title">成绩管理</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-edit"></i>
+                    <span>作业批改</span>
+                    <span class="badge warning">8</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>成绩管理</span>
+                </a>
+                
+                <div class="nav-section-title">数据分析</div>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>班级报表</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-file-export"></i>
+                    <span>导出报告</span>
+                </a>
+            </nav>
+            
+            <div class="user-card">
+                <div class="user-avatar">王</div>
+                <div class="user-info">
+                    <div class="user-name">王老师</div>
+                    <div class="user-role">电商教研室</div>
+                </div>
+                <i class="fas fa-cog" style="color: rgba(255,255,255,0.5); cursor: pointer;"></i>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <a href="teacher-home.html">工作台</a> / 审核中心 / <span>待审核</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="dot"></span>
+                    </div>
+                    <div class="header-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">
+                        待审核作品
+                        <span class="page-title-sub">共 12 件作品等待审核</span>
+                    </h1>
+                </div>
+                
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="filter-tabs">
+                        <div class="filter-tab active">全部<span class="count">12</span></div>
+                        <div class="filter-tab">已检测<span class="count">8</span></div>
+                        <div class="filter-tab">检测中<span class="count">2</span></div>
+                        <div class="filter-tab">有风险<span class="count">2</span></div>
+                    </div>
+                    
+                    <div class="filter-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="搜索学生姓名或作品名称...">
+                    </div>
+                    
+                    <select class="filter-select">
+                        <option>全部班级</option>
+                        <option>电商2301班</option>
+                        <option>电商2302班</option>
+                        <option>电商2303班</option>
+                    </select>
+                    
+                    <select class="filter-select">
+                        <option>提交时间排序</option>
+                        <option>最新提交优先</option>
+                        <option>最早提交优先</option>
+                    </select>
+                </div>
+                
+                <!-- Review Grid -->
+                <div class="review-grid">
+                    <!-- Card 1 - Safe -->
+                    <div class="review-card" onclick="location.href='teacher-review-detail.html'">
+                        <div class="review-card-image">
+                            <i class="fas fa-tshirt"></i>
+                            <span class="review-card-badge safe"><i class="fas fa-check"></i> 安全</span>
+                            <span class="review-card-product"><i class="fas fa-tshirt"></i> 女装T恤</span>
+                        </div>
+                        <div class="review-card-body">
+                            <h3 class="review-card-title">春日樱花猫咪T恤设计</h3>
+                            <div class="review-card-student">
+                                <div class="student-avatar">张</div>
+                                <div class="student-info">
+                                    <div class="student-name">张小红</div>
+                                    <div class="student-class">电商2301班</div>
+                                </div>
+                            </div>
+                            <div class="review-card-meta">
+                                <span class="review-card-time">
+                                    <i class="fas fa-clock"></i>
+                                    10分钟前
+                                </span>
+                                <div class="review-card-actions">
+                                    <button class="review-action-btn primary">审核</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 - Pending -->
+                    <div class="review-card">
+                        <div class="review-card-image">
+                            <i class="fas fa-mug-hot"></i>
+                            <span class="review-card-badge pending"><i class="fas fa-spinner fa-spin"></i> 检测中</span>
+                            <span class="review-card-product"><i class="fas fa-mug-hot"></i> 马克杯</span>
+                        </div>
+                        <div class="review-card-body">
+                            <h3 class="review-card-title">情人节爱心马克杯设计</h3>
+                            <div class="review-card-student">
+                                <div class="student-avatar">李</div>
+                                <div class="student-info">
+                                    <div class="student-name">李明</div>
+                                    <div class="student-class">电商2301班</div>
+                                </div>
+                            </div>
+                            <div class="review-card-meta">
+                                <span class="review-card-time">
+                                    <i class="fas fa-clock"></i>
+                                    25分钟前
+                                </span>
+                                <div class="review-card-actions">
+                                    <button class="review-action-btn outline" disabled>等待检测</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3 - Risk -->
+                    <div class="review-card risk">
+                        <div class="review-card-image">
+                            <i class="fas fa-tshirt"></i>
+                            <span class="review-card-badge risk"><i class="fas fa-exclamation-triangle"></i> 有风险</span>
+                            <span class="review-card-product"><i class="fas fa-tshirt"></i> 卫衣</span>
+                        </div>
+                        <div class="review-card-body">
+                            <h3 class="review-card-title">街头涂鸦风卫衣设计</h3>
+                            <div class="review-card-student">
+                                <div class="student-avatar">王</div>
+                                <div class="student-info">
+                                    <div class="student-name">王大力</div>
+                                    <div class="student-class">电商2302班</div>
+                                </div>
+                            </div>
+                            <div class="review-card-meta">
+                                <span class="review-card-time">
+                                    <i class="fas fa-clock"></i>
+                                    1小时前
+                                </span>
+                                <div class="review-card-actions">
+                                    <button class="review-action-btn primary">审核</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 4 - Safe -->
+                    <div class="review-card">
+                        <div class="review-card-image">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span class="review-card-badge safe"><i class="fas fa-check"></i> 安全</span>
+                            <span class="review-card-product"><i class="fas fa-shopping-bag"></i> 帆布袋</span>
+                        </div>
+                        <div class="review-card-body">
+                            <h3 class="review-card-title">简约文艺帆布袋设计</h3>
+                            <div class="review-card-student">
+                                <div class="student-avatar">赵</div>
+                                <div class="student-info">
+                                    <div class="student-name">赵小雨</div>
+                                    <div class="student-class">电商2301班</div>
+                                </div>
+                            </div>
+                            <div class="review-card-meta">
+                                <span class="review-card-time">
+                                    <i class="fas fa-clock"></i>
+                                    2小时前
+                                </span>
+                                <div class="review-card-actions">
+                                    <button class="review-action-btn primary">审核</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 5 - Safe -->
+                    <div class="review-card">
+                        <div class="review-card-image">
+                            <i class="fas fa-blanket"></i>
+                            <span class="review-card-badge safe"><i class="fas fa-check"></i> 安全</span>
+                            <span class="review-card-product"><i class="fas fa-th-large"></i> 毛毯</span>
+                        </div>
+                        <div class="review-card-body">
+                            <h3 class="review-card-title">星空主题法兰绒毛毯</h3>
+                            <div class="review-card-student">
+                                <div class="student-avatar">周</div>
+                                <div class="student-info">
+                                    <div class="student-name">周晓晓</div>
+                                    <div class="student-class">电商2302班</div>
+                                </div>
+                            </div>
+                            <div class="review-card-meta">
+                                <span class="review-card-time">
+                                    <i class="fas fa-clock"></i>
+                                    3小时前
+                                </span>
+                                <div class="review-card-actions">
+                                    <button class="review-action-btn primary">审核</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 6 - Risk -->
+                    <div class="review-card risk">
+                        <div class="review-card-image">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span class="review-card-badge risk"><i class="fas fa-exclamation-triangle"></i> 有风险</span>
+                            <span class="review-card-product"><i class="fas fa-mobile-alt"></i> 手机壳</span>
+                        </div>
+                        <div class="review-card-body">
+                            <h3 class="review-card-title">动漫风格手机壳设计</h3>
+                            <div class="review-card-student">
+                                <div class="student-avatar">刘</div>
+                                <div class="student-info">
+                                    <div class="student-name">刘小东</div>
+                                    <div class="student-class">电商2303班</div>
+                                </div>
+                            </div>
+                            <div class="review-card-meta">
+                                <span class="review-card-time">
+                                    <i class="fas fa-clock"></i>
+                                    4小时前
+                                </span>
+                                <div class="review-card-actions">
+                                    <button class="review-action-btn primary">审核</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Nav item click
+        document.querySelectorAll('.nav-item:not(.highlight)').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (!this.getAttribute('href') || this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
