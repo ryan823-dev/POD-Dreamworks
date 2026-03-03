@@ -44,16 +44,16 @@ export default function LoginPage() {
       <div className="absolute w-[300px] h-[300px] rounded-full bg-primary/10 blur-[80px] top-[20%] left-[15%]" style={{ animation: 'float 20s ease-in-out infinite' }} />
       <div className="absolute w-[200px] h-[200px] rounded-full bg-pink-500/10 blur-[60px] bottom-[20%] right-[15%]" style={{ animation: 'float 20s ease-in-out infinite', animationDelay: '-7s' }} />
 
-      <div className="relative z-10 w-full max-w-[420px] px-6">
-        <div className="text-center mb-10">
-          <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-[16px] flex items-center justify-center mx-auto mb-4">
-            <Rocket className="w-7 h-7 text-white" />
+      <div className="relative z-10 w-full max-w-[420px] px-4 sm:px-6">
+        <div className="text-center mb-8 sm:mb-10">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-primary to-primary-dark rounded-[14px] sm:rounded-[16px] flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <Rocket className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold mb-1">POD Dreamworks</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-1">POD Dreamworks</h1>
           <p className="text-sm text-text-secondary">跨境电商实训平台</p>
         </div>
 
-        <div className="bg-white/[0.04] border border-border rounded-[24px] p-8 backdrop-blur-sm">
+        <div className="bg-white/[0.04] border border-border rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 backdrop-blur-sm">
           <div className="flex gap-2 p-1 bg-white/5 rounded-[12px] mb-8">
             {roleOptions.map((r) => (
               <button

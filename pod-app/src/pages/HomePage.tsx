@@ -123,38 +123,39 @@ export default function HomePage() {
         <div className="absolute w-[200px] h-[200px] rounded-full bg-teacher/12 blur-[60px] bottom-[20%] left-[30%] animate-float" style={{ animationDelay: '-14s' }} />
 
         {/* Nav */}
-        <nav className="relative z-10 flex justify-between items-center px-12 py-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-[10px] flex items-center justify-center">
-              <Rocket className="w-[18px] h-[18px]" />
+        <nav className="relative z-10 flex justify-between items-center px-4 sm:px-8 lg:px-12 py-4 sm:py-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-primary-dark rounded-[8px] sm:rounded-[10px] flex items-center justify-center">
+              <Rocket className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
             </div>
-            <span className="text-lg font-bold tracking-tight">POD Dreamworks</span>
+            <span className="text-base sm:text-lg font-bold tracking-tight">POD Dreamworks</span>
           </div>
-          <div className="flex items-center gap-8">
-            <a href="#features" className="text-sm text-text-secondary hover:text-white transition-colors">平台特色</a>
-            <a href="#roles" className="text-sm text-text-secondary hover:text-white transition-colors">角色入口</a>
-            <button onClick={() => navigate('/login')} className="px-6 py-2.5 bg-white/10 border border-white/15 rounded-[10px] text-sm font-medium backdrop-blur-sm hover:bg-white/20 transition-all">
-              登录平台
+          <div className="flex items-center gap-3 sm:gap-8">
+            <a href="#features" className="hidden sm:block text-sm text-text-secondary hover:text-white transition-colors">平台特色</a>
+            <a href="#roles" className="hidden sm:block text-sm text-text-secondary hover:text-white transition-colors">角色入口</a>
+            <button onClick={() => navigate('/login')} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-white/10 border border-white/15 rounded-[8px] sm:rounded-[10px] text-sm font-medium backdrop-blur-sm hover:bg-white/20 transition-all">
+              登录
             </button>
           </div>
         </nav>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-12 relative z-10">
-          <div className="inline-flex items-center gap-2 px-5 py-2 bg-primary/15 border border-primary/30 rounded-full text-[13px] text-primary-glow mb-8">
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-8 lg:px-12 relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 bg-primary/15 border border-primary/30 rounded-full text-xs sm:text-[13px] text-primary-glow mb-6 sm:mb-8">
             <Cpu className="w-3 h-3" />
             AI驱动 · 真实电商 · 创意实训
           </div>
-          <h1 className="text-6xl font-extrabold leading-tight tracking-tighter mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tighter mb-4 sm:mb-6">
             让每一个创意
             <br />
             <span className="bg-gradient-to-r from-primary-glow via-primary-light to-pink-400 bg-clip-text text-transparent">
               走向全球货架
             </span>
           </h1>
-          <p className="text-xl text-text-secondary max-w-[600px] leading-relaxed mb-12">
+          <p className="text-base sm:text-lg lg:text-xl text-text-secondary max-w-[600px] leading-relaxed mb-8 sm:mb-12 px-2">
             <strong className="text-white/80">POD Dreamworks</strong> 是面向高等院校的跨境电商实训平台。
-            <br />
+            <br className="hidden sm:block" />
+            <span className="sm:hidden"> </span>
             学生自由创作设计，AI辅助合规检测，作品真实上架到全球平台。
           </p>
         </div>
@@ -166,58 +167,58 @@ export default function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="relative z-10 py-20 px-12">
-        <div className="grid grid-cols-4 gap-6 max-w-[1000px] mx-auto">
+      <section className="relative z-10 py-12 sm:py-20 px-4 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-[1000px] mx-auto">
           {[
             { id: 'schools', target: 12, label: '入驻学校', color: 'text-primary-glow' },
             { id: 'students', target: 3856, label: '实训学生', color: 'text-success' },
             { id: 'designs', target: 28432, label: '设计作品', color: 'text-admin-light' },
             { id: 'orders', target: 2134, label: '真实订单', color: 'text-pink-300' },
           ].map((s) => (
-            <div key={s.id} className="text-center p-8 bg-white/[0.03] border border-border rounded-[20px] hover:bg-white/[0.06] hover:-translate-y-1 transition-all">
-              <div className={`text-[42px] font-extrabold tracking-tighter mb-2 ${s.color}`}>
+            <div key={s.id} className="text-center p-4 sm:p-8 bg-white/[0.03] border border-border rounded-[14px] sm:rounded-[20px] hover:bg-white/[0.06] hover:-translate-y-1 transition-all">
+              <div className={`text-2xl sm:text-[42px] font-extrabold tracking-tighter mb-1 sm:mb-2 ${s.color}`}>
                 <AnimatedNumber target={s.target} id={`stat-${s.id}`} />
               </div>
-              <div className="text-sm text-text-secondary">{s.label}</div>
+              <div className="text-xs sm:text-sm text-text-secondary">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Roles */}
-      <section id="roles" className="py-20 px-12 relative z-10">
-        <div className="text-center mb-16">
-          <div className="text-xs uppercase tracking-[2px] text-text-muted mb-4">角色入口</div>
-          <h2 className="text-4xl font-bold tracking-tight">选择你的身份，开始探索</h2>
+      <section id="roles" className="py-12 sm:py-20 px-4 sm:px-8 lg:px-12 relative z-10">
+        <div className="text-center mb-10 sm:mb-16">
+          <div className="text-xs uppercase tracking-[2px] text-text-muted mb-3 sm:mb-4">角色入口</div>
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">选择你的身份，开始探索</h2>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 max-w-[1100px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-[1100px] mx-auto">
           {roles.map((role) => {
             const colors = roleColors[role.colorClass]
             return (
               <div
                 key={role.key}
                 onClick={() => navigate(role.to)}
-                className="group bg-white/[0.03] border border-border rounded-[24px] overflow-hidden cursor-pointer hover:-translate-y-2 hover:border-border-light transition-all duration-400"
+                className="group bg-white/[0.03] border border-border rounded-[16px] sm:rounded-[24px] overflow-hidden cursor-pointer hover:-translate-y-2 hover:border-border-light transition-all duration-400"
               >
-                <div className="h-[200px] flex items-center justify-center relative overflow-hidden">
-                  <div className={`absolute w-[200px] h-[200px] rounded-full ${colors.glow} opacity-30 blur-[60px]`} />
-                  <div className={`w-[120px] h-[120px] rounded-[30px] flex items-center justify-center text-5xl relative z-[1] ${colors.iconBg} group-hover:scale-110 transition-transform`}>
-                    <role.icon className="w-12 h-12" />
+                <div className="h-[140px] sm:h-[200px] flex items-center justify-center relative overflow-hidden">
+                  <div className={`absolute w-[150px] sm:w-[200px] h-[150px] sm:h-[200px] rounded-full ${colors.glow} opacity-30 blur-[40px] sm:blur-[60px]`} />
+                  <div className={`w-[80px] sm:w-[120px] h-[80px] sm:h-[120px] rounded-[20px] sm:rounded-[30px] flex items-center justify-center text-3xl sm:text-5xl relative z-[1] ${colors.iconBg} group-hover:scale-110 transition-transform`}>
+                    <role.icon className="w-8 h-8 sm:w-12 sm:h-12" />
                   </div>
                 </div>
-                <div className="px-8 pb-8">
-                  <h3 className="text-[22px] font-bold mb-2">{role.name}</h3>
-                  <p className="text-sm text-text-secondary leading-relaxed mb-5">{role.desc}</p>
-                  <div className="flex flex-col gap-2.5 mb-6">
+                <div className="px-5 sm:px-8 pb-5 sm:pb-8">
+                  <h3 className="text-lg sm:text-[22px] font-bold mb-1 sm:mb-2">{role.name}</h3>
+                  <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-4 sm:mb-5">{role.desc}</p>
+                  <div className="flex flex-col gap-2 sm:gap-2.5 mb-4 sm:mb-6">
                     {role.features.map((f, i) => (
-                      <div key={i} className={`flex items-center gap-2.5 text-[13px] text-text-secondary`}>
+                      <div key={i} className={`flex items-center gap-2 sm:gap-2.5 text-xs sm:text-[13px] text-text-secondary`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${colors.dot} bg-current`} />
                         {f}
                       </div>
                     ))}
                   </div>
-                  <div className={`flex items-center justify-center gap-2 py-3.5 rounded-[14px] text-sm font-semibold transition-all group-hover:gap-3 ${colors.btnBase} ${colors.btnHover}`}>
+                  <div className={`flex items-center justify-center gap-2 py-3 sm:py-3.5 rounded-[10px] sm:rounded-[14px] text-sm font-semibold transition-all group-hover:gap-3 ${colors.btnBase} ${colors.btnHover}`}>
                     {role.enterText}
                     <ArrowRight className="w-4 h-4" />
                   </div>
@@ -229,12 +230,12 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-20 px-12 relative z-10 bg-white/[0.02] border-t border-border">
-        <div className="text-center mb-16">
-          <div className="text-xs uppercase tracking-[2px] text-text-muted mb-4">核心能力</div>
-          <h2 className="text-4xl font-bold tracking-tight">为什么选择 POD Dreamworks</h2>
+      <section id="features" className="py-12 sm:py-20 px-4 sm:px-8 lg:px-12 relative z-10 bg-white/[0.02] border-t border-border">
+        <div className="text-center mb-10 sm:mb-16">
+          <div className="text-xs uppercase tracking-[2px] text-text-muted mb-3 sm:mb-4">核心能力</div>
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">为什么选择 POD Dreamworks</h2>
         </div>
-        <div className="grid grid-cols-4 gap-8 max-w-[1100px] mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 max-w-[1100px] mx-auto">
           {[
             { icon: Brain, name: 'AI 赋能创作', desc: '学生可使用任意AI工具自由创作，平台不限制设计来源，鼓励创新', color: 'bg-primary/15 text-primary-light' },
             { icon: Shield, name: '智能合规检测', desc: '接入小AI商创侵权检测引擎，自动识别品牌、版权风险，保障安全上架', color: 'bg-success/15 text-success' },
@@ -242,34 +243,34 @@ export default function HomePage() {
             { icon: BarChart3, name: '数据驱动教学', desc: '全链路数据追踪，从设计到订单，用真实数据指导教学，量化教学成果', color: 'bg-admin/15 text-admin-light' },
           ].map((f, i) => (
             <div key={i} className="text-center">
-              <div className={`w-14 h-14 rounded-[16px] flex items-center justify-center text-2xl mx-auto mb-4 ${f.color}`}>
-                <f.icon className="w-6 h-6" />
+              <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-[12px] sm:rounded-[16px] flex items-center justify-center text-xl sm:text-2xl mx-auto mb-3 sm:mb-4 ${f.color}`}>
+                <f.icon className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <h4 className="text-base font-semibold mb-2">{f.name}</h4>
-              <p className="text-[13px] text-text-muted leading-relaxed">{f.desc}</p>
+              <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2">{f.name}</h4>
+              <p className="text-xs sm:text-[13px] text-text-muted leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-12 border-t border-border relative z-10">
-        <div className="max-w-[1100px] mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2.5 font-semibold text-sm">
-              <div className="w-7 h-7 bg-gradient-to-br from-primary to-primary-dark rounded-md flex items-center justify-center text-xs">
+      <footer className="py-8 sm:py-12 px-4 sm:px-8 lg:px-12 border-t border-border relative z-10">
+        <div className="max-w-[1100px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-2 sm:gap-2.5 font-semibold text-sm">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-primary to-primary-dark rounded-md flex items-center justify-center text-xs">
                 <Rocket className="w-3 h-3" />
               </div>
               POD Dreamworks
             </div>
-            <div className="w-px h-5 bg-white/10" />
+            <div className="w-px h-5 bg-white/10 hidden sm:block" />
             <div className="text-xs text-text-muted flex items-center gap-1.5">
               <Cpu className="w-3 h-3" />
               技术支持：小AI商创
             </div>
           </div>
           <div className="text-xs text-white/25">
-            &copy; 2026 POD Dreamworks. 跨境电商实训平台.
+            &copy; 2026 POD Dreamworks
           </div>
         </div>
       </footer>

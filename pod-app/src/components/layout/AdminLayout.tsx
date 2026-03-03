@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import {
   BarChart3, Target, Building2, Users, CalendarDays,
   GraduationCap, UserCheck, ShieldCheck, Box, Coins,
-  Settings, LogOut
+  Settings, LogOut, Menu, X
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -27,16 +28,41 @@ const navItems = [
 export default function AdminLayout() {
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
 
+  const closeSidebar = () => setSidebarOpen(false)
+
   return (
     <div className="flex min-h-screen">
-      <aside className="w-[240px] bg-gradient-to-b from-[#111827] to-[#1f2937] text-white fixed h-screen overflow-y-auto z-50 flex flex-col border-r border-white/5">
-        <div className="p-5 border-b border-white/5">
+      {/* Mobile Header */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-gradient-to-r from-[#111827] to-[#1f2937] z-50 flex items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="w-5 h-5 text-white" />
+          <span className="text-white font-bold">POD Dreamworks</span>
+          <span className="px-2 py-0.5 bg-admin rounded text-[10px] text-black font-semibold">管理端</span>
+        </div>
+        <button onClick={() => setSidebarOpen(true)} className="text-white p-2">
+          <Menu className="w-5 h-5" />
+        </button>
+      </header>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-50" onClick={closeSidebar} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        w-[240px] bg-gradient-to-b from-[#111827] to-[#1f2937] text-white fixed h-screen overflow-y-auto z-50 flex flex-col border-r border-white/5
+        transition-transform duration-300 lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <div className="p-5 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-[10px] flex items-center justify-center text-lg">
               <ShieldCheck className="w-5 h-5" />
@@ -47,6 +73,9 @@ export default function AdminLayout() {
               <div className="inline-block ml-2 px-2 py-0.5 bg-admin rounded text-[10px] text-black font-semibold">管理端</div>
             </div>
           </div>
+          <button onClick={closeSidebar} className="lg:hidden text-white/60 hover:text-white p-1">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         <nav className="flex-1 py-4">
@@ -55,7 +84,7 @@ export default function AdminLayout() {
               return <div key={i} className="text-[10px] uppercase text-white/30 px-5 py-2 tracking-wider font-semibold">{item.label}</div>
             }
             return (
-              <NavLink key={i} to={item.to!} end={item.to === '/admin'}
+              <NavLink key={i} to={item.to!} end={item.to === '/admin'} onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-5 py-2.5 text-sm transition-all relative ${
                     isActive ? 'bg-primary/20 text-white before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] before:bg-primary'
@@ -90,7 +119,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 ml-[240px] bg-bg min-h-screen">
+      <main className="flex-1 lg:ml-[240px] bg-bg min-h-screen pt-14 lg:pt-0">
         <Outlet />
       </main>
     </div>

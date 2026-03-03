@@ -1,7 +1,8 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import {
   Home, Palette, ShoppingBag, Package, BookOpen,
-  Award, Bell, Plus, LogOut
+  Award, Bell, Plus, LogOut, Menu, X
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -22,16 +23,40 @@ const navItems = [
 export default function StudentLayout() {
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
 
+  const closeSidebar = () => setSidebarOpen(false)
+
   return (
     <div className="flex min-h-screen">
-      <aside className="w-[var(--sidebar-width)] bg-gradient-to-b from-[#1e1b4b] to-[#312e81] text-white fixed h-screen overflow-y-auto z-50 flex flex-col">
-        <div className="p-5 border-b border-white/10">
+      {/* Mobile Header */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-gradient-to-r from-[#1e1b4b] to-[#312e81] z-50 flex items-center justify-between px-4">
+        <div className="flex items-center gap-2">
+          <Palette className="w-5 h-5 text-white" />
+          <span className="text-white font-bold">POD Dreamworks</span>
+        </div>
+        <button onClick={() => setSidebarOpen(true)} className="text-white p-2">
+          <Menu className="w-5 h-5" />
+        </button>
+      </header>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-50" onClick={closeSidebar} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        w-[var(--sidebar-width)] bg-gradient-to-b from-[#1e1b4b] to-[#312e81] text-white fixed h-screen overflow-y-auto z-50 flex flex-col
+        transition-transform duration-300 lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-[10px] flex items-center justify-center text-lg">
               <Palette className="w-5 h-5" />
@@ -42,6 +67,9 @@ export default function StudentLayout() {
               <div className="inline-block ml-2 px-2 py-0.5 bg-primary rounded text-[10px]">学生端</div>
             </div>
           </div>
+          <button onClick={closeSidebar} className="lg:hidden text-white/60 hover:text-white p-1">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         <nav className="flex-1 py-4">
@@ -59,6 +87,7 @@ export default function StudentLayout() {
                 <NavLink
                   key={i}
                   to={item.to!}
+                  onClick={closeSidebar}
                   className="mx-4 my-2 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-primary-dark rounded-[10px] text-white font-semibold hover:shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
                 >
                   {item.icon && <item.icon className="w-4 h-4" />}
@@ -72,6 +101,7 @@ export default function StudentLayout() {
                 key={i}
                 to={item.to!}
                 end={item.to === '/student'}
+                onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-5 py-3 text-sm transition-all relative ${
                     isActive
@@ -112,7 +142,7 @@ export default function StudentLayout() {
         </div>
       </aside>
 
-      <main className="flex-1 ml-[var(--sidebar-width)] bg-page-bg min-h-screen">
+      <main className="flex-1 lg:ml-[var(--sidebar-width)] bg-page-bg min-h-screen pt-14 lg:pt-0">
         <Outlet />
       </main>
     </div>
