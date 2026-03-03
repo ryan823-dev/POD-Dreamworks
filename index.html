@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POD Dreamworks - 高校跨境电商AI实训平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #22c55e;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f1f5f9;
+            --white: #ffffff;
+            --sidebar-width: 240px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 i {
+            color: var(--accent);
+        }
+        
+        .logo span {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            display: block;
+            margin-top: 4px;
+        }
+        
+        .nav-section {
+            padding: 16px 0;
+        }
+        
+        .nav-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            padding: 0 20px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 12px;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+        }
+        
+        .nav-item.active {
+            background: rgba(99, 102, 241, 0.3);
+            color: var(--white);
+            border-right: 3px solid var(--primary);
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+        }
+        
+        /* Header */
+        .header {
+            background: var(--white);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .breadcrumb {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .breadcrumb span {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 8px;
+            padding: 8px 16px;
+            gap: 8px;
+        }
+        
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        .search-box i {
+            color: var(--gray);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+        
+        .header-icon:hover {
+            background: var(--light);
+        }
+        
+        .header-icon .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+        
+        .user-profile:hover {
+            background: var(--light);
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .user-info {
+            text-align: left;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        /* Page Content */
+        .page-content {
+            padding: 32px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .page-subtitle {
+            color: var(--gray);
+            margin-bottom: 32px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .stat-card .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .stat-card .stat-icon.purple {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+        
+        .stat-card .stat-icon.green {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--secondary);
+        }
+        
+        .stat-card .stat-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent);
+        }
+        
+        .stat-card .stat-icon.red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .stat-card .stat-trend {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+        
+        .stat-card .stat-trend.up {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--secondary);
+        }
+        
+        .stat-card .stat-trend.down {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .stat-card .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-card .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .card-action {
+            color: var(--primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .card-body {
+            padding: 24px;
+        }
+        
+        /* Task List */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: var(--light);
+            border-radius: 12px;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .task-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .task-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .task-icon.design {
+            background: linear-gradient(135deg, #f472b6, #ec4899);
+            color: white;
+        }
+        
+        .task-icon.product {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            color: white;
+        }
+        
+        .task-icon.order {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            color: white;
+        }
+        
+        .task-icon.analysis {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .task-meta {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .task-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .task-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent);
+        }
+        
+        .task-status.progress {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+        
+        .task-status.completed {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--secondary);
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 24px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .progress-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .progress-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-fill.purple {
+            background: linear-gradient(90deg, var(--primary), #818cf8);
+        }
+        
+        .progress-fill.green {
+            background: linear-gradient(90deg, var(--secondary), #86efac);
+        }
+        
+        .progress-fill.orange {
+            background: linear-gradient(90deg, var(--accent), #fcd34d);
+        }
+        
+        /* Leaderboard */
+        .leaderboard {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--light);
+            border-radius: 10px;
+        }
+        
+        .leaderboard-rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .leaderboard-rank.gold {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+        
+        .leaderboard-rank.silver {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            color: white;
+        }
+        
+        .leaderboard-rank.bronze {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+        }
+        
+        .leaderboard-rank.normal {
+            background: var(--white);
+            color: var(--gray);
+        }
+        
+        .leaderboard-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--primary);
+        }
+        
+        .leaderboard-info {
+            flex: 1;
+        }
+        
+        .leaderboard-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .leaderboard-class {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .leaderboard-score {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 8px;
+        }
+        
+        .quick-action:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .quick-action i {
+            font-size: 24px;
+        }
+        
+        .quick-action span {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* Role Tabs */
+        .role-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: 12px;
+            width: fit-content;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .role-tab {
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .role-tab:hover {
+            background: var(--light);
+        }
+        
+        .role-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Achievement Badges */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .badge-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        
+        .badge-icon.earned {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        
+        .badge-icon.locked {
+            background: var(--light);
+            color: var(--gray);
+        }
+        
+        .badge-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .badge-desc {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1><i class="fas fa-rocket"></i> POD Dreamworks</h1>
+                <span>高校跨境电商AI实训平台</span>
+            </div>
+            
+            <nav class="nav-section">
+                <div class="nav-section-title">工作台</div>
+                <div class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>首页概览</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>我的任务</span>
+                    <span class="badge">3</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-folder"></i>
+                    <span>作品集</span>
+                </div>
+            </nav>
+            
+            <nav class="nav-section">
+                <div class="nav-section-title">实训模块</div>
+                <div class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>市场选品</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-palette"></i>
+                    <span>AI设计</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-store"></i>
+                    <span>商品上架</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-box"></i>
+                    <span>订单运营</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>数据分析</span>
+                </div>
+            </nav>
+            
+            <nav class="nav-section">
+                <div class="nav-section-title">学习中心</div>
+                <div class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>知识库</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>成就徽章</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-medal"></i>
+                    <span>排行榜</span>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        工作台 / <span>首页概览</span>
+                    </div>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="搜索任务、作品...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="dot"></span>
+                    </div>
+                    <div class="header-icon">
+                        <i class="fas fa-comment"></i>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-avatar">李</div>
+                        <div class="user-info">
+                            <div class="user-name">李明</div>
+                            <div class="user-role">电商2301班</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Role Tabs -->
+                <div class="role-tabs">
+                    <div class="role-tab active">学生视角</div>
+                    <div class="role-tab">教师视角</div>
+                    <div class="role-tab">管理视角</div>
+                </div>
+                
+                <h1 class="page-title">欢迎回来，李明 👋</h1>
+                <p class="page-subtitle">今天是学习的好日子！你已完成本周 60% 的实训任务</p>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <span class="stat-trend up"><i class="fas fa-arrow-up"></i> 12%</span>
+                        </div>
+                        <div class="stat-value">28</div>
+                        <div class="stat-label">设计作品</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon green">
+                                <i class="fas fa-store"></i>
+                            </div>
+                            <span class="stat-trend up"><i class="fas fa-arrow-up"></i> 8%</span>
+                        </div>
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">上架商品</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <span class="stat-trend up"><i class="fas fa-arrow-up"></i> 23%</span>
+                        </div>
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">真实订单</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon red">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="stat-trend up"><i class="fas fa-arrow-up"></i> 5%</span>
+                        </div>
+                        <div class="stat-value">1,280</div>
+                        <div class="stat-label">实训积分</div>
+                    </div>
+                </div>
+                
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Tasks Card -->
+                        <div class="card" style="margin-bottom: 24px;">
+                            <div class="card-header">
+                                <h3 class="card-title">📋 待完成任务</h3>
+                                <span class="card-action">查看全部 →</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="task-list">
+                                    <div class="task-item">
+                                        <div class="task-icon design">
+                                            <i class="fas fa-paint-brush"></i>
+                                        </div>
+                                        <div class="task-content">
+                                            <div class="task-title">设计3款情人节主题T恤</div>
+                                            <div class="task-meta">截止时间：2月18日 · 奖励：100积分</div>
+                                        </div>
+                                        <span class="task-status progress">进行中</span>
+                                    </div>
+                                    <div class="task-item">
+                                        <div class="task-icon product">
+                                            <i class="fas fa-upload"></i>
+                                        </div>
+                                        <div class="task-content">
+                                            <div class="task-title">将设计作品上架到TikTok Shop</div>
+                                            <div class="task-meta">截止时间：2月20日 · 奖励：150积分</div>
+                                        </div>
+                                        <span class="task-status pending">待开始</span>
+                                    </div>
+                                    <div class="task-item">
+                                        <div class="task-icon analysis">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                        <div class="task-content">
+                                            <div class="task-title">分析上周商品销售数据</div>
+                                            <div class="task-meta">截止时间：2月22日 · 奖励：80积分</div>
+                                        </div>
+                                        <span class="task-status pending">待开始</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">📊 学习进度</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="progress-section">
+                                    <div class="progress-header">
+                                        <span class="progress-label">市场选品实训</span>
+                                        <span class="progress-value">85%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill purple" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-section">
+                                    <div class="progress-header">
+                                        <span class="progress-label">AI设计实训</span>
+                                        <span class="progress-value">72%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill green" style="width: 72%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-section">
+                                    <div class="progress-header">
+                                        <span class="progress-label">商品上架实训</span>
+                                        <span class="progress-value">45%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill orange" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-section" style="margin-bottom: 0;">
+                                    <div class="progress-header">
+                                        <span class="progress-label">订单运营实训</span>
+                                        <span class="progress-value">30%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill purple" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Quick Actions -->
+                        <div class="card" style="margin-bottom: 24px;">
+                            <div class="card-header">
+                                <h3 class="card-title">⚡ 快捷入口</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="quick-actions">
+                                    <div class="quick-action">
+                                        <i class="fas fa-magic"></i>
+                                        <span>AI设计</span>
+                                    </div>
+                                    <div class="quick-action">
+                                        <i class="fas fa-search-dollar"></i>
+                                        <span>热门选品</span>
+                                    </div>
+                                    <div class="quick-action">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>快速上架</span>
+                                    </div>
+                                    <div class="quick-action">
+                                        <i class="fas fa-box-open"></i>
+                                        <span>订单处理</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Leaderboard -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">🏆 班级排行榜</h3>
+                                <span class="card-action">本周</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="leaderboard">
+                                    <div class="leaderboard-item">
+                                        <div class="leaderboard-rank gold">1</div>
+                                        <div class="leaderboard-avatar">张</div>
+                                        <div class="leaderboard-info">
+                                            <div class="leaderboard-name">张小红</div>
+                                            <div class="leaderboard-class">12件作品 · 8单成交</div>
+                                        </div>
+                                        <div class="leaderboard-score">2,450</div>
+                                    </div>
+                                    <div class="leaderboard-item">
+                                        <div class="leaderboard-rank silver">2</div>
+                                        <div class="leaderboard-avatar">王</div>
+                                        <div class="leaderboard-info">
+                                            <div class="leaderboard-name">王大力</div>
+                                            <div class="leaderboard-class">10件作品 · 6单成交</div>
+                                        </div>
+                                        <div class="leaderboard-score">1,980</div>
+                                    </div>
+                                    <div class="leaderboard-item">
+                                        <div class="leaderboard-rank bronze">3</div>
+                                        <div class="leaderboard-avatar">李</div>
+                                        <div class="leaderboard-info">
+                                            <div class="leaderboard-name">李明 (我)</div>
+                                            <div class="leaderboard-class">8件作品 · 6单成交</div>
+                                        </div>
+                                        <div class="leaderboard-score">1,280</div>
+                                    </div>
+                                    <div class="leaderboard-item">
+                                        <div class="leaderboard-rank normal">4</div>
+                                        <div class="leaderboard-avatar">赵</div>
+                                        <div class="leaderboard-info">
+                                            <div class="leaderboard-name">赵小雨</div>
+                                            <div class="leaderboard-class">6件作品 · 4单成交</div>
+                                        </div>
+                                        <div class="leaderboard-score">1,120</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Achievement Section -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header">
+                        <h3 class="card-title">🎖️ 成就徽章</h3>
+                        <span class="card-action">已获得 5/12</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="badges-grid">
+                            <div class="badge-item">
+                                <div class="badge-icon earned">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <div class="badge-name">初出茅庐</div>
+                                <div class="badge-desc">完成首个设计作品</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon earned">
+                                    <i class="fas fa-paint-brush"></i>
+                                </div>
+                                <div class="badge-name">设计达人</div>
+                                <div class="badge-desc">累计设计20件作品</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon earned">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <div class="badge-name">开张大吉</div>
+                                <div class="badge-desc">获得首个真实订单</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon earned">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="badge-name">连续奋斗</div>
+                                <div class="badge-desc">连续7天登录学习</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon earned">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="badge-name">数据分析师</div>
+                                <div class="badge-desc">完成5次数据分析</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon locked">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <div class="badge-name">销售冠军</div>
+                                <div class="badge-desc">单周销售额第一</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon locked">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div class="badge-name">全球卖家</div>
+                                <div class="badge-desc">商品销往3个国家</div>
+                            </div>
+                            <div class="badge-item">
+                                <div class="badge-icon locked">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <div class="badge-name">爆款制造</div>
+                                <div class="badge-desc">单品销量超过50</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.role-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Nav item switching
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
